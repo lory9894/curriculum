@@ -1,0 +1,151 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Lorenzo Dentis",
+    "label": "Cybersecurity OT Consultant",
+    "image": "https://INSERISCI_URL_FOTO_QUI",
+    "email": "lory9894@gmail.com",
+    "phone": "(+39) 3272014546",
+    "summary": "Motivated and curious Computer Science graduate with a strong background in network security and distributed systems. Currently working as an OT Cybersecurity Consultant, supporting industrial clients in securing their operational technology environments. I tend to follow the hacker mindset: understand how things work under the hood, then use that knowledge to build something better.",
+    "location": {
+      "address": "Via Balegno 7",
+      "postalCode": "10098",
+      "city": "Rivoli",
+      "countryCode": "IT",
+      "region": "Piedmont"
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "lory9894",
+        "url": "https://github.com/lory9894"
+      },
+      {
+        "network": "GitHub (academic)",
+        "username": "lory9894University",
+        "url": "https://github.com/lory9894University"
+      }
+    ]
+  },
+  "work": [
+    {
+      "name": "Spike Reply",
+      "location": "Turin, Italy",
+      "position": "Cybersecurity OT Consultant",
+      "startDate": "2024-08-21",
+      "summary": "Supporting industrial clients in building and maintaining secure OT networks.",
+      "highlights": [
+        "Installation and maintenance of Secure Remote Access solutions (Wallix)",
+        "Deployment and maintenance of Intrusion Detection Systems (Claroty and Nozomi): configuration of physical and virtual probes, network device setup for traffic collection, ongoing maintenance and troubleshooting",
+        "SOC activities: intrusion monitoring and detection using the aforementioned tools",
+        "Compliance consulting on ISA/IEC 62443, NIS2, and MITRE ATT&CK frameworks",
+        "Security assessments in industrial plants: network infrastructure analysis, physical security review, compliance interviews, and penetration testing on relevant devices"
+      ]
+    },
+    {
+      "name": "Arcese Trasporti",
+      "location": "Rivalta, Italy",
+      "position": "Intern",
+      "startDate": "2023-12-16",
+      "endDate": "2024-07-01",
+      "summary": "Curricular internship as part of the Master's thesis project.",
+      "highlights": [
+        "Migration of a batch-based system (Java Spring) to a stream-based architecture (Apache Flink), as part of a broader transition from a monolithic system to an event-driven microservices architecture"
+      ]
+    },
+    {
+      "name": "SUSE",
+      "location": "Turin, Italy",
+      "position": "Intern",
+      "startDate": "2021-07-01",
+      "endDate": "2021-09-30",
+      "summary": "Curricular internship as part of the Bachelor's thesis project.",
+      "highlights": [
+        "Research on tracing overhead introduced in virtualized environments (Xen and KVM)"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "University of Turin",
+      "url": "https://www.unito.it/",
+      "area": "Computer Science – Security, Networks and Systems",
+      "studyType": "Master's Degree",
+      "startDate": "2021-10-19",
+      "endDate": "2024-07-16",
+      "score": "110/110 with honours",
+      "courses": [
+        "Thesis: Velocity Project – Migration from a legacy system to an Event-Driven microservices architecture (Java Spring, Apache Flink)"
+      ]
+    },
+    {
+      "institution": "University of Turin",
+      "url": "https://www.unito.it/",
+      "area": "Computer Science",
+      "studyType": "Bachelor's Degree",
+      "startDate": "2019-09-10",
+      "endDate": "2021-11-25",
+      "score": "110/110",
+      "courses": [
+        "Thesis: Comparing KVM and XEN tracing overhead – Supervisor: Prof. Enrico Bini"
+      ]
+    },
+    {
+      "institution": "I.I.S. Giulio Natta",
+      "area": "Applied Sciences",
+      "studyType": "High School Diploma (Scientific)",
+      "startDate": "2012-08-31",
+      "endDate": "2017-11-27",
+      "score": "85/100"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Homelab",
+      "startDate": "2020-01-01",
+      "description": "Ongoing management of a multi-server homelab built on repurposed hardware, used as a hands-on lab to experiment with real technologies. Focus areas include networking (VLAN, DNS, DHCP, VPN with OpenVPN), infrastructure monitoring with Grafana, and service orchestration via Docker Compose/Swarm. The lab also hosts MCP (Model Context Protocol) servers for integrating external tools with LLMs.",
+      "keywords": ["Docker", "Docker Swarm", "Linux", "Networking", "VPN", "Grafana", "MCP", "LLM Integration", "Self-hosting"]
+    }
+  ],
+  "skills": [
+    {
+      "name": "Systems",
+      "keywords": ["Docker", "Kubernetes", "Linux (Ubuntu/Debian, Arch)", "Windows", "VirtualBox", "VMware"]
+    },
+    {
+      "name": "Cybersecurity",
+      "keywords": ["OT Security", "IDS (Claroty, Nozomi)", "Secure Remote Access (Wallix)", "Penetration Testing", "ISA/IEC 62443", "NIS2", "MITRE ATT&CK", "SOC"]
+    },
+    {
+      "name": "Microservices Development",
+      "keywords": ["Java Spring", "Apache Flink", "Apache Kafka"]
+    },
+    {
+      "name": "Programming Languages",
+      "keywords": ["Java", "Python", "C", "Bash"]
+    },
+    {
+      "name": "Tools",
+      "keywords": ["Git"]
+    },
+    {
+      "name": "Familiar with",
+      "keywords": ["C++", "JavaScript", "PHP", "HTML", "Arduino", "ESP8266", "Raspberry Pi"]
+    }
+  ],
+  "languages": [
+    {
+      "language": "Italian",
+      "fluency": "Native"
+    },
+    {
+      "language": "English",
+      "fluency": "C2 (reading/listening), B2 (writing/speaking)"
+    }
+  ],
+  "meta": {
+    "canonical": "https://raw.githubusercontent.com/jsonresume/resume-schema/master/resume.json",
+    "version": "v1.0.0",
+    "lastModified": "2026-05-18"
+  }
+}
