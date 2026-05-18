@@ -11,9 +11,6 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,18 +21,18 @@ jobs:
           node-version: '20'
 
       - name: Install resume-cli and theme (locally)
-        run: npm install resume-cli jsonresume-theme-even@0
+        run: npm install resume-cli jsonresume-theme-even
 
       - name: Export CV Italian
-        run: npx resume export index.html --theme even --resume resume-it.json
+        run: npx resume export dist/index.html --theme even --resume resume-it.json
 
       - name: Export CV English
-        run: npx resume export index-en.html --theme even --resume resume-en.json
+        run: npx resume export dist/index-en.html --theme even --resume resume-en.json
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: 'dist'   # <--- only upload the output files
 
       - name: Deploy to GitHub Pages
         id: deploy
