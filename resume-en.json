@@ -3,7 +3,7 @@
   "basics": {
     "name": "Lorenzo Dentis",
     "label": "Cybersecurity OT Consultant",
-    "image": "https://github.com/lory9894/curriculum/blob/main/profile.png",
+    "image": "https://raw.githubusercontent.com/lory9894/curriculum/refs/heads/main/profile.png",
     "email": "lory9894@gmail.com",
     "phone": "(+39) 3272014546",
     "summary": "OT Cybersecurity Consultant with experience in complex industrial environments, specializing in IDS, Secure Remote Access, and ISA/IEC 62443 and NIS2 compliance. Academic background in Security, Networking, and Systems with a solid foundation in distributed architectures and Linux systems. Practical approach focused on a deep understanding of systems: from virtualization to industrial protocols, I enjoy taking things apart to truly understand how they work so I can improve, recreate, and secure them",
