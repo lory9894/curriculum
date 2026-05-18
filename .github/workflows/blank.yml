@@ -24,7 +24,7 @@ jobs:
           node-version: '20'
 
       - name: Install resume-cli and theme (locally)
-        run: npm install resume-cli jsonresume-theme-even
+        run: npm install resume-cli jsonresume-theme-even@0
 
       - name: Export CV Italian
         run: npx resume export index.html --theme even --resume resume-it.json
