@@ -1,264 +1,54 @@
 #!/usr/bin/env bash
-# ──────────────────────────────────────────────
-# build_cv.sh — genera il CV HTML da un JSON Resume
-# Uso: ./build_cv.sh resume.json [output.html]
-# ──────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────
+# build_cv.sh — inietta il JSON reale nel template HTML
+#
+# Uso:
+#   ./build_cv.sh                        → usa resume.json + template.html
+#   ./build_cv.sh dati.json              → JSON custom, template default
+#   ./build_cv.sh dati.json altro.html   → JSON e template custom
+#
+# Output: resume_out.html (aprilo nel browser, poi Ctrl+P per il PDF)
+# ──────────────────────────────────────────────────────────────
 set -euo pipefail
 
-# ── Argomenti ─────────────────────────────────
-JSON_FILE="${1:-}"
-OUTPUT_FILE="${2:-}"
+JSON_FILE="${1:-resume.json}"
+TEMPLATE="${2:-template.html}"
+OUTPUT="resume_out.html"
 
-if [[ -z "$JSON_FILE" ]]; then
-  echo "Uso: $0 <resume.json> [output.html]" >&2
-  exit 1
-fi
+# ── Controlli ─────────────────────────────────
+[[ -f "$JSON_FILE" ]]  || { echo "✗ JSON non trovato: $JSON_FILE" >&2; exit 1; }
+[[ -f "$TEMPLATE" ]]   || { echo "✗ Template non trovato: $TEMPLATE" >&2; exit 1; }
 
-if [[ ! -f "$JSON_FILE" ]]; then
-  echo "Errore: file '$JSON_FILE' non trovato." >&2
-  exit 1
-fi
-
-# Output di default: stesso nome del JSON ma .html
-if [[ -z "$OUTPUT_FILE" ]]; then
-  OUTPUT_FILE="${JSON_FILE%.*}.html"
-fi
-
-# ── Leggi e valida il JSON ─────────────────────
+# ── Valida e formatta il JSON ──────────────────
 if command -v jq &>/dev/null; then
-  if ! jq empty "$JSON_FILE" 2>/dev/null; then
-    echo "Errore: '$JSON_FILE' non è un JSON valido." >&2
-    exit 1
-  fi
-  NAME=$(jq -r '.basics.name // "CV"' "$JSON_FILE")
-  JSON_CONTENT=$(jq '.' "$JSON_FILE")   # formattato
+  jq empty "$JSON_FILE" 2>/dev/null || { echo "✗ JSON non valido: $JSON_FILE" >&2; exit 1; }
+  JSON_CONTENT=$(jq '.' "$JSON_FILE")
 else
-  echo "Avviso: jq non trovato, il JSON verrà incluso senza validazione." >&2
-  NAME="CV"
+  echo "⚠ jq non trovato — JSON incluso senza validazione."
   JSON_CONTENT=$(cat "$JSON_FILE")
 fi
 
-# ── Template HTML ──────────────────────────────
-# Il JSON viene iniettato nella variabile JS `CV`.
-cat > "$OUTPUT_FILE" <<HTMLEOF
-<!DOCTYPE html>
-<html lang="it">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CV – ${NAME}</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --accent: #0f3d5c;
-    --accent-light: #e6f1fb;
-    --accent-mid: #185fa5;
-    --text: #1a1a1a;
-    --muted: #555;
-    --border: #ddd;
-    --bg: #fafaf8;
-    --page: #ffffff;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
-  .page { max-width: 820px; margin: 2rem auto; background: var(--page); box-shadow: 0 2px 24px rgba(0,0,0,0.08); }
-  .header { display: grid; grid-template-columns: 1fr auto; gap: 2rem; padding: 3rem 3rem 2rem; border-bottom: 3px solid var(--accent); background: var(--accent); color: white; }
-  .header-left h1 { font-family: 'DM Serif Display', serif; font-size: 2.6rem; font-weight: 400; letter-spacing: -0.5px; line-height: 1.1; color: white; }
-  .header-left .label { font-size: 0.85rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-top: 0.4rem; margin-bottom: 1.2rem; }
-  .contacts { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; }
-  .contacts a, .contacts span { color: rgba(255,255,255,0.85); text-decoration: none; font-size: 0.82rem; display: flex; align-items: center; gap: 0.3rem; }
-  .contacts a:hover { color: white; text-decoration: underline; }
-  .header-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; gap: 0.4rem; }
-  .profile-img-wrap { width: 110px; height: 110px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.3); overflow: hidden; flex-shrink: 0; }
-  .profile-img { width: 130%; height: 130%; margin-left: -15%; margin-top: -10%; object-fit: cover; object-position: center top; }
-  .profile-placeholder { width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,0.15); border: 3px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-family: 'DM Serif Display', serif; font-size: 2rem; color: white; }
-  .body { display: grid; grid-template-columns: 1fr 240px; }
-  .main { padding: 2.5rem 2.5rem 2.5rem 3rem; border-right: 1px solid var(--border); }
-  .sidebar { padding: 2.5rem 2rem; background: #f7f7f5; }
-  .section { margin-bottom: 2rem; }
-  .section-title { font-size: 0.65rem; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase; color: var(--accent-mid); border-bottom: 1.5px solid var(--accent-light); padding-bottom: 0.4rem; margin-bottom: 1.2rem; }
-  .job { margin-bottom: 1.6rem; }
-  .job:last-child { margin-bottom: 0; }
-  .job-header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-  .job-title { font-weight: 600; font-size: 0.92rem; color: var(--text); }
-  .job-period { font-size: 0.75rem; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
-  .job-company { font-size: 0.82rem; color: var(--accent-mid); font-weight: 500; margin-bottom: 0.3rem; }
-  .job-summary { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
-  .job-highlights { list-style: none; padding: 0; }
-  .job-highlights li { font-size: 0.8rem; color: #333; padding: 0.15rem 0 0.15rem 1rem; position: relative; line-height: 1.5; }
-  .job-highlights li::before { content: '–'; position: absolute; left: 0; color: var(--accent-mid); }
-  .edu { margin-bottom: 1.2rem; }
-  .edu:last-child { margin-bottom: 0; }
-  .edu-degree { font-weight: 600; font-size: 0.88rem; }
-  .edu-institution { font-size: 0.82rem; color: var(--accent-mid); font-weight: 500; }
-  .edu-details { font-size: 0.78rem; color: var(--muted); margin-top: 0.1rem; }
-  .edu-score { display: inline-block; background: var(--accent-light); color: var(--accent); font-size: 0.72rem; font-weight: 600; padding: 1px 7px; border-radius: 3px; margin-top: 0.2rem; }
-  .project { margin-bottom: 1.2rem; }
-  .project-name { font-weight: 600; font-size: 0.88rem; }
-  .project-desc { font-size: 0.8rem; color: #333; margin-top: 0.2rem; line-height: 1.5; }
-  .tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
-  .tag { font-size: 0.68rem; font-weight: 500; background: #eef2f7; color: var(--accent); padding: 2px 7px; border-radius: 3px; letter-spacing: 0.3px; }
-  .skill-group { margin-bottom: 1.2rem; }
-  .skill-group-name { font-size: 0.72rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
-  .skill-pills { display: flex; flex-wrap: wrap; gap: 0.3rem; }
-  .skill-pill { font-size: 0.72rem; background: white; border: 1px solid #dde3ea; color: #333; padding: 2px 8px; border-radius: 3px; }
-  .lang { margin-bottom: 0.8rem; }
-  .lang-name { font-weight: 600; font-size: 0.85rem; }
-  .lang-level { font-size: 0.75rem; color: var(--muted); }
-  .summary-text { font-size: 0.82rem; color: #333; line-height: 1.65; font-style: italic; }
-  .profile-links { display: flex; flex-direction: column; gap: 0.4rem; }
-  .profile-link { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--accent-mid); text-decoration: none; }
-  .profile-link:hover { text-decoration: underline; }
-  .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
-  @media print { body { background: white; } .page { box-shadow: none; margin: 0; max-width: 100%; } .header { padding: 2rem 2.5rem 1.5rem; } .main { padding: 2rem 2rem 2rem 2.5rem; } .sidebar { padding: 2rem 1.5rem; } }
-  @media (max-width: 640px) { .body { grid-template-columns: 1fr; } .sidebar { border-top: 1px solid var(--border); } .header { grid-template-columns: 1fr; } .header-right { align-items: flex-start; } .main, .sidebar { padding: 1.5rem; } .header { padding: 2rem 1.5rem; } }
-</style>
-</head>
-<body>
-<div class="page" id="cv-root">
-  <div class="header">
-    <div class="header-left">
-      <h1 id="cv-name"></h1>
-      <div class="label" id="cv-label"></div>
-      <div class="contacts" id="cv-contacts"></div>
-    </div>
-    <div class="header-right" id="cv-photo-wrap"></div>
-  </div>
-  <div class="body">
-    <div class="main" id="cv-main"></div>
-    <div class="sidebar" id="cv-sidebar"></div>
-  </div>
-</div>
-<script>
-const CV = ${JSON_CONTENT};
+# ── Sostituisce __CV_DATA__ con il JSON reale ──
+# Usa Python per l'escape sicuro: evita problemi con caratteri
+# speciali (apici, backslash, newline) nel sed.
+python3 - "$TEMPLATE" "$OUTPUT" "$JSON_CONTENT" <<'PYEOF'
+import sys
 
-function fmtDate(d) {
-  if (!d) return 'presente';
-  const [y, m] = d.split('-');
-  const months = ['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic'];
-  return months[parseInt(m)-1] + ' ' + y;
-}
-function fmtPeriod(start, end) { return fmtDate(start) + ' – ' + fmtDate(end); }
+template_path = sys.argv[1]
+output_path   = sys.argv[2]
+json_content  = sys.argv[3]
 
-function section(title) {
-  const s = document.createElement('div');
-  s.className = 'section';
-  s.innerHTML = '<div class="section-title">' + title + '</div>';
-  return s;
-}
-function showInitials(wrap, name) {
-  wrap.innerHTML = '';
-  const div = document.createElement('div');
-  div.className = 'profile-placeholder';
-  div.textContent = name.split(' ').map(w => w[0]).join('').slice(0,2);
-  wrap.appendChild(div);
-}
-function renderHeader() {
-  const b = CV.basics;
-  document.getElementById('cv-name').textContent = b.name;
-  document.getElementById('cv-label').textContent = b.label;
-  const contacts = document.getElementById('cv-contacts');
-  const add = (icon, text, href) => {
-    const el = href ? document.createElement('a') : document.createElement('span');
-    if (href) el.href = href;
-    el.innerHTML = '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">' + icon + '</svg> ' + text;
-    contacts.appendChild(el);
-  };
-  add('<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>', b.email, 'mailto:' + b.email);
-  add('<path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.81 19.79 19.79 0 01.22 2.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.56-.56a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z"/>', b.phone);
-  if (b.location) add('<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>', (b.location.city || '') + (b.location.region ? ', ' + b.location.region : ''));
-  const photoWrap = document.getElementById('cv-photo-wrap');
-  const imgUrl = b.image && !b.image.includes('INSERISCI') ? b.image : null;
-  if (imgUrl) {
-    const wrap = document.createElement('div');
-    wrap.className = 'profile-img-wrap';
-    const img = document.createElement('img');
-    img.src = imgUrl; img.className = 'profile-img'; img.alt = b.name;
-    img.onerror = () => { photoWrap.innerHTML = ''; showInitials(photoWrap, b.name); };
-    wrap.appendChild(img); photoWrap.appendChild(wrap);
-  } else { showInitials(photoWrap, b.name); }
-}
-function renderMain() {
-  const main = document.getElementById('cv-main');
-  if (CV.basics.summary) {
-    const s = section('Profilo');
-    const p = document.createElement('p'); p.className = 'summary-text'; p.textContent = CV.basics.summary;
-    s.appendChild(p); main.appendChild(s);
-  }
-  if (CV.work && CV.work.length) {
-    const s = section('Esperienze Lavorative');
-    CV.work.forEach(job => {
-      const d = document.createElement('div'); d.className = 'job';
-      d.innerHTML = '<div class="job-header"><span class="job-title">' + job.position + '</span><span class="job-period">' + fmtPeriod(job.startDate, job.endDate) + '</span></div>'
-        + '<div class="job-company">' + job.name + (job.location ? ' · ' + job.location : '') + '</div>'
-        + (job.summary ? '<div class="job-summary">' + job.summary + '</div>' : '')
-        + (job.highlights && job.highlights.length ? '<ul class="job-highlights">' + job.highlights.map(h => '<li>' + h + '</li>').join('') + '</ul>' : '');
-      s.appendChild(d);
-    });
-    main.appendChild(s);
-  }
-  if (CV.education && CV.education.length) {
-    const s = section('Formazione');
-    CV.education.forEach(edu => {
-      const d = document.createElement('div'); d.className = 'edu';
-      const link = edu.url ? '<a href="' + edu.url + '" style="color:inherit;text-decoration:none;">' + edu.institution + '</a>' : edu.institution;
-      d.innerHTML = '<div class="edu-degree">' + edu.studyType + (edu.area ? ' – ' + edu.area : '') + '</div>'
-        + '<div class="edu-institution">' + link + '</div>'
-        + '<div class="edu-details">' + fmtPeriod(edu.startDate, edu.endDate) + (edu.score ? ' &nbsp;|&nbsp; <span class="edu-score">' + edu.score + '</span>' : '') + '</div>'
-        + (edu.courses && edu.courses.length ? '<div class="edu-details" style="margin-top:0.3rem;">' + edu.courses[0] + '</div>' : '');
-      s.appendChild(d);
-    });
-    main.appendChild(s);
-  }
-  if (CV.projects && CV.projects.length) {
-    const s = section('Progetti Personali');
-    CV.projects.forEach(proj => {
-      const d = document.createElement('div'); d.className = 'project';
-      d.innerHTML = '<div class="project-name">' + proj.name + (proj.startDate ? ' <span style="font-weight:300;color:var(--muted);font-size:0.78rem;">(' + proj.startDate.slice(0,4) + '–)</span>' : '') + '</div>'
-        + '<div class="project-desc">' + proj.description + '</div>'
-        + (proj.keywords ? '<div class="tags">' + proj.keywords.map(k => '<span class="tag">' + k + '</span>').join('') + '</div>' : '');
-      s.appendChild(d);
-    });
-    main.appendChild(s);
-  }
-}
-function renderSidebar() {
-  const sidebar = document.getElementById('cv-sidebar');
-  if (CV.skills && CV.skills.length) {
-    const s = section('Competenze');
-    CV.skills.forEach(group => {
-      const d = document.createElement('div'); d.className = 'skill-group';
-      d.innerHTML = '<div class="skill-group-name">' + group.name + '</div><div class="skill-pills">' + group.keywords.map(k => '<span class="skill-pill">' + k + '</span>').join('') + '</div>';
-      s.appendChild(d);
-    });
-    sidebar.appendChild(s);
-  }
-  if (CV.languages && CV.languages.length) {
-    sidebar.insertAdjacentHTML('beforeend', '<div class="divider"></div>');
-    const s = section('Lingue');
-    CV.languages.forEach(lang => {
-      const d = document.createElement('div'); d.className = 'lang';
-      d.innerHTML = '<div class="lang-name">' + lang.language + '</div><div class="lang-level">' + lang.fluency + '</div>';
-      s.appendChild(d);
-    });
-    sidebar.appendChild(s);
-  }
-  if (CV.basics.profiles && CV.basics.profiles.length) {
-    sidebar.insertAdjacentHTML('beforeend', '<div class="divider"></div>');
-    const s = section('Link');
-    const links = document.createElement('div'); links.className = 'profile-links';
-    CV.basics.profiles.forEach(p => {
-      const a = document.createElement('a'); a.href = p.url; a.className = 'profile-link'; a.target = '_blank';
-      a.innerHTML = '<svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg> ' + p.network;
-      links.appendChild(a);
-    });
-    s.appendChild(links); sidebar.appendChild(s);
-  }
-}
-renderHeader(); renderMain(); renderSidebar();
-</script>
-</body>
-</html>
-HTMLEOF
+with open(template_path, 'r', encoding='utf-8') as f:
+    html = f.read()
 
-echo "✓ CV generato: $OUTPUT_FILE"
+if '__CV_DATA__' not in html:
+    print("✗ Placeholder '__CV_DATA__' non trovato nel template.", file=sys.stderr)
+    sys.exit(1)
+
+result = html.replace('__CV_DATA__', json_content, 1)
+
+with open(output_path, 'w', encoding='utf-8') as f:
+    f.write(result)
+PYEOF
+
+echo "✓ CV generato → $OUTPUT"
