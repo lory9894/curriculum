@@ -357,82 +357,156 @@
   }
 } con il JSON reale.
    ────────────────────────────────────────────────────────────────────── */
-const CV = (typeof __CV_DATA__ !== 'undefined') ? __CV_DATA__ : {
+const CV = {
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
   "basics": {
-    "name": "Mario Rossi",
-    "label": "Senior Software Engineer",
-    "image": "",
-    "email": "mario.rossi@example.com",
-    "phone": "(+39) 333 0000000",
-    "summary": "Sviluppatore appassionato con esperienza nel design di sistemi distribuiti e architetture cloud-native. Amo risolvere problemi complessi con soluzioni eleganti.",
-    "location": { "city": "Milano", "region": "Lombardia" },
+    "name": "Lorenzo Dentis",
+    "label": "Cybersecurity OT Consultant",
+    "image": "https://raw.githubusercontent.com/lory9894/curriculum/refs/heads/main/profile.png",
+    "email": "lory9894@gmail.com",
+    "phone": "(+39) 3272014546",
+    "summary": "Specialista in reti e sicurezza con esperienza nella progettazione, configurazione e analisi di architetture di rete in ambienti industriali complessi. Background accademico in Sicurezza, Reti e Sistemi, con competenze pratiche in networking (VLAN, VPN, routing, switching), analisi del traffico e sistemi Linux. Approccio pratico e orientato alla comprensione profonda dei sistemi: mi piace smontare le cose per capire davvero come funzionano, in modo da poterle progettare, migliorare e rendere sicure.",
+    "location": {
+      "address": "Via Balegno 7",
+      "postalCode": "10098",
+      "city": "Rivoli",
+      "countryCode": "IT",
+      "region": "Piemonte"
+    },
     "profiles": [
-      { "network": "GitHub", "username": "mariorossi", "url": "https://github.com/mariorossi" },
-      { "network": "LinkedIn", "username": "mario-rossi", "url": "https://linkedin.com/in/mario-rossi" }
+      {
+        "network": "GitHub",
+        "username": "lory9894",
+        "url": "https://github.com/lory9894"
+      },
+      {
+        "network": "GitHub (universitario)",
+        "username": "lory9894University",
+        "url": "https://github.com/lory9894University"
+      }
     ]
   },
   "work": [
     {
-      "name": "Acme Corp",
-      "location": "Milano, Italia",
-      "position": "Senior Software Engineer",
-      "startDate": "2021-03-01",
+      "name": "Spike Reply",
+      "location": "Torino, Italia",
+      "position": "Cybersecurity OT Consultant",
+      "startDate": "2024-08-21",
+      "summary": "Supporto al cliente per la progettazione, l'analisi e il mantenimento di reti industriali sicure e scalabili.",
       "highlights": [
-        "Progettazione e implementazione di un sistema di pagamenti distribuito che gestisce 1M+ transazioni/giorno",
-        "Migrazione dell'infrastruttura legacy su Kubernetes riducendo i costi operativi del 40%",
-        "Mentoring di un team di 4 sviluppatori junior"
+        "Attività di security assessment in plant industriali: analisi approfondita dell'infrastruttura di rete (topologia, segmentazione, flussi di traffico), analisi physical security e penetration testing su dispositivi rilevanti",
+        "Installazione e mantenimento Intrusion Detection System (Claroty e Nozomi): configurazione di sonde fisiche e virtuali, configurazione di dispositivi di rete (switch, tap, SPAN) per la raccolta e l'analisi del traffico, manutenzione e troubleshooting",
+        "SOC: monitoraggio e rilevamento intrusioni, analisi del traffico di rete per l'identificazione di anomalie e comportamenti sospetti",
+        "Installazione e mantenimento di soluzioni di Secure Remote Access (Wallix)",
+        "Consulenza riguardo alla compliance sulle normative ISA/IEC 62443, NIS2, MITRE ATT&CK"
       ]
     },
     {
-      "name": "StartupXYZ",
-      "location": "Torino, Italia",
-      "position": "Software Engineer",
-      "startDate": "2018-06-01",
-      "endDate": "2021-02-28",
-      "summary": "Sviluppo full-stack in un ambiente agile.",
+      "name": "Arcese Trasporti",
+      "location": "Rivalta, Italia",
+      "position": "Tirocinante",
+      "startDate": "2023-12-16",
+      "endDate": "2024-07-01",
+      "summary": "Tirocinio curriculare nell'ambito della tesi magistrale.",
       "highlights": [
-        "Sviluppo del core backend in Go per una piattaforma SaaS B2B",
-        "Implementazione di una pipeline CI/CD completa su GitHub Actions"
+        "Migrazione di un sistema batch based (Java Spring) a uno stream based (Apache Flink) nell'ambito di una più ampia migrazione da sistema monolitico a sistema ad eventi basato su microservizi"
+      ]
+    },
+    {
+      "name": "SUSE",
+      "location": "Torino, Italia",
+      "position": "Tirocinante",
+      "startDate": "2021-07-01",
+      "endDate": "2021-09-30",
+      "summary": "Tirocinio curriculare nell'ambito della tesi triennale.",
+      "highlights": [
+        "Studio dell'overhead introdotto dal tracing in un sistema virtualizzato (Xen e KVM)"
       ]
     }
   ],
   "education": [
     {
-      "institution": "Politecnico di Milano",
-      "url": "https://www.polimi.it",
-      "area": "Ingegneria Informatica",
+      "institution": "Università degli Studi di Torino",
+      "url": "https://www.unito.it/",
+      "area": "Informatica – percorso Sicurezza, Reti e Sistemi",
       "studyType": "Laurea Magistrale",
-      "startDate": "2016-09-01",
-      "endDate": "2018-04-30",
-      "score": "110/110 con lode"
+      "startDate": "2021-10-19",
+      "endDate": "2024-07-16",
+      "score": "110/110 con lode",
+      "courses": [
+        "Tesi: Progetto Velocity – Transizione da sistema legacy a Event Driven basato su microservizi (Java Spring, Apache Flink)"
+      ]
     },
     {
-      "institution": "Politecnico di Torino",
-      "area": "Ingegneria Informatica",
+      "institution": "Università degli Studi di Torino",
+      "url": "https://www.unito.it/",
+      "area": "Informatica",
       "studyType": "Laurea Triennale",
-      "startDate": "2013-09-01",
-      "endDate": "2016-07-15",
-      "score": "108/110"
+      "startDate": "2019-09-10",
+      "endDate": "2021-11-25",
+      "score": "110/110",
+      "courses": [
+        "Tesi: Comparing KVM and XEN tracing overhead – Relatore: Prof. Enrico Bini"
+      ]
+    },
+    {
+      "institution": "I.I.S. Giulio Natta",
+      "area": "Scienze Applicate",
+      "studyType": "Liceo Scientifico",
+      "startDate": "2012-08-31",
+      "endDate": "2017-11-27",
+      "score": "85/100"
     }
   ],
   "projects": [
     {
-      "name": "OpenMetrics",
-      "startDate": "2022-01-01",
-      "description": "Libreria open source per la raccolta e l'aggregazione di metriche applicative. Oltre 500 star su GitHub e adottata da diversi progetti production.",
-      "keywords": ["Go", "Prometheus", "OpenTelemetry", "Open Source"]
+      "name": "Homelab",
+      "startDate": "2020-01-01",
+      "description": "Progettazione e gestione continuativa di un homelab multi-server su hardware di scarto, usato come laboratorio per sperimentare tecnologie in ambiente reale. Focus principale su networking: progettazione e configurazione di VLAN, DNS, DHCP, VPN site-to-site con OpenVPN, e analisi del traffico con Wireshark. Orchestrazione dei servizi tramite Docker Compose/Swarm, monitoraggio e visualizzazione dati con Grafana.",
+      "keywords": ["VLAN", "VPN", "OpenVPN", "DNS", "DHCP", "Wireshark", "Docker", "Docker Swarm", "Linux", "Networking", "Grafana", "Self-hosting"]
     }
   ],
   "skills": [
-    { "name": "Backend", "keywords": ["Go", "Java", "Python", "REST", "gRPC"] },
-    { "name": "Infrastruttura", "keywords": ["Kubernetes", "Docker", "Terraform", "AWS"] },
-    { "name": "Database", "keywords": ["PostgreSQL", "Redis", "MongoDB"] },
-    { "name": "Strumenti", "keywords": ["Git", "GitHub Actions", "Jira"] }
+    {
+      "name": "Networking",
+      "keywords": ["VLAN", "VPN (OpenVPN)", "DNS", "DHCP", "Routing & Switching", "Analisi del traffico (Wireshark)", "Network segmentation", "SPAN/TAP"]
+    },
+    {
+      "name": "Sistemi",
+      "keywords": ["Linux (Ubuntu/Debian, Arch)", "Docker", "Kubernetes", "Windows", "VirtualBox", "VMware"]
+    },
+    {
+      "name": "Cybersecurity",
+      "keywords": ["OT Security", "IDS (Claroty, Nozomi)", "Secure Remote Access (Wallix)", "Penetration Testing", "ISA/IEC 62443", "NIS2", "MITRE ATT&CK", "SOC"]
+    },
+    {
+      "name": "Linguaggi di Programmazione",
+      "keywords": ["Python", "Bash", "Java", "C"]
+    },
+    {
+      "name": "Strumenti",
+      "keywords": ["Git"]
+    },
+    {
+      "name": "Familiarità con",
+      "keywords": ["C++", "JavaScript", "Arduino", "ESP8266", "Raspberry Pi"]
+    }
   ],
   "languages": [
-    { "language": "Italiano", "fluency": "Madrelingua" },
-    { "language": "Inglese", "fluency": "C1" }
-  ]
+    {
+      "language": "Italiano",
+      "fluency": "Madrelingua"
+    },
+    {
+      "language": "Inglese",
+      "fluency": "C2 (lettura/ascolto), B2 (produzione scritta e orale)"
+    }
+  ],
+  "meta": {
+    "canonical": "https://raw.githubusercontent.com/jsonresume/resume-schema/master/resume.json",
+    "version": "v1.0.0",
+    "lastModified": "2026-05-20"
+  }
 };
 
 /* ── RENDERER ─────────────────────────────────────────────────────────── */

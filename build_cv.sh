@@ -68,7 +68,7 @@ else
   JSON_CONTENT=$(cat "$JSON_FILE")
 fi
 
-# ── Sostituisce __CV_DATA__ con il JSON reale ──────────────────
+# ── Sostituisce tutte le occorrenze di __CV_DATA__ ────────────
 python3 - "$TEMPLATE" "$OUTPUT" "$JSON_CONTENT" <<'PYEOF'
 import sys
 
@@ -83,7 +83,8 @@ if '__CV_DATA__' not in html:
     print("✗ Placeholder '__CV_DATA__' non trovato nel template.", file=sys.stderr)
     sys.exit(1)
 
-result = html.replace('__CV_DATA__', json_content, 1)
+# Sostituisce TUTTE le occorrenze (nel template __CV_DATA__ compare due volte)
+result = html.replace('__CV_DATA__', json_content)
 
 with open(output_path, 'w', encoding='utf-8') as f:
     f.write(result)
