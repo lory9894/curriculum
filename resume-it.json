@@ -103,7 +103,7 @@
     {
       "name": "Homelab",
       "startDate": "2020-01-01",
-      "description": "Gestione continuativa di un homelab multi-server su hardware di scarto, usato come laboratorio per sperimentare tecnologie in ambiente reale. Focus su networking (VLAN, DNS, DHCP, VPN con OpenVPN), monitoring dell'infrastruttura con Grafana, e orchestrazione dei servizi tramite Docker Compose/Swarm. Il lab ospita inoltre server MCP (Model Context Protocol) per l'integrazione di tool esterni con LLM.",
+      "description": "Gestione continuativa di un homelab multi-server su hardware di scarto, usato come laboratorio per sperimentare tecnologie in ambiente reale. Focus su networking (VLAN, DNS, DHCP, VPN con OpenVPN), monitoraggio e visualizzazione dati con Grafana (domotica via Home Assistant, metriche di allenamento da Garmin), e orchestrazione dei servizi tramite Docker Compose/Swarm. Il lab ospita inoltre server MCP (Model Context Protocol) per l'integrazione di tool esterni con LLM.",
       "keywords": ["Docker", "Docker Swarm", "Linux", "Networking", "VPN", "Grafana", "MCP", "LLM Integration", "Self-hosting"]
     }
   ],
