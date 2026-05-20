@@ -3,23 +3,63 @@
 # build_cv.sh — inietta il JSON reale nel template HTML
 #
 # Uso:
-#   ./build_cv.sh                        → usa resume.json + template.html
-#   ./build_cv.sh dati.json              → JSON custom, template default
-#   ./build_cv.sh dati.json altro.html   → JSON e template custom
+#   ./build_cv.sh resume.json
+#   ./build_cv.sh resume.json -t altro.html
+#   ./build_cv.sh resume.json -o output.html
+#   ./build_cv.sh resume.json -t altro.html -o output.html
 #
-# Output: resume_out.html (aprilo nel browser, poi Ctrl+P per il PDF)
+# Output: resume-out.html (aprilo nel browser, poi Ctrl+P per il PDF)
 # ──────────────────────────────────────────────────────────────
 set -euo pipefail
 
-JSON_FILE="${1:-resume.json}"
-TEMPLATE="${2:-template.html}"
-OUTPUT="resume_out.html"
+usage() {
+  cat >&2 <<EOF
+Uso: $0 <file.json> [-t template.html] [-o output.html] [-h]
 
-# ── Controlli ─────────────────────────────────
-[[ -f "$JSON_FILE" ]]  || { echo "✗ JSON non trovato: $JSON_FILE" >&2; exit 1; }
-[[ -f "$TEMPLATE" ]]   || { echo "✗ Template non trovato: $TEMPLATE" >&2; exit 1; }
+Argomenti:
+  <file.json>          File JSON con i dati del CV (obbligatorio)
 
-# ── Valida e formatta il JSON ──────────────────
+Opzioni:
+  -t <template.html>   Template HTML da usare       (default: template.html)
+  -o <output.html>     File HTML di output           (default: resume-out.html)
+  -h, --help           Mostra questo messaggio di aiuto
+
+Esempio:
+  $0 resume.json
+  $0 resume.json -t altro.html -o cv-mario.html
+EOF
+  exit "${1:-0}"
+}
+
+# ── Help anticipato (--help non è gestito da getopts) ─────────
+for arg in "$@"; do
+  [[ "$arg" == "--help" ]] && usage 0
+done
+
+# ── JSON obbligatorio come primo argomento ─────────────────────
+[[ $# -lt 1 || "$1" == -* ]] && usage 1
+JSON_FILE="$1"
+shift
+
+# ── Parametri opzionali ────────────────────────────────────────
+TEMPLATE="template.html"
+OUTPUT="resume-out.html"
+
+while getopts ":t:o:h" opt; do
+  case $opt in
+    t) TEMPLATE="$OPTARG" ;;
+    o) OUTPUT="$OPTARG" ;;
+    h) usage 0 ;;
+    :) echo "✗ Il parametro -$OPTARG richiede un valore." >&2; usage 1 ;;
+    \?) echo "✗ Parametro sconosciuto: -$OPTARG" >&2; usage 1 ;;
+  esac
+done
+
+# ── Controlli ─────────────────────────────────────────────────
+[[ -f "$JSON_FILE" ]] || { echo "✗ JSON non trovato: $JSON_FILE" >&2; exit 1; }
+[[ -f "$TEMPLATE" ]]  || { echo "✗ Template non trovato: $TEMPLATE" >&2; exit 1; }
+
+# ── Valida e formatta il JSON ──────────────────────────────────
 if command -v jq &>/dev/null; then
   jq empty "$JSON_FILE" 2>/dev/null || { echo "✗ JSON non valido: $JSON_FILE" >&2; exit 1; }
   JSON_CONTENT=$(jq '.' "$JSON_FILE")
@@ -28,9 +68,7 @@ else
   JSON_CONTENT=$(cat "$JSON_FILE")
 fi
 
-# ── Sostituisce __CV_DATA__ con il JSON reale ──
-# Usa Python per l'escape sicuro: evita problemi con caratteri
-# speciali (apici, backslash, newline) nel sed.
+# ── Sostituisce __CV_DATA__ con il JSON reale ──────────────────
 python3 - "$TEMPLATE" "$OUTPUT" "$JSON_CONTENT" <<'PYEOF'
 import sys
 
