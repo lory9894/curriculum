@@ -46,7 +46,7 @@ jobs:
             name="${json_file%.json}"
             echo "→ Build: $json_file → dist/${name}.html"
             ./build_cv.sh "$json_file" template.html
-            mv resume_out.html "dist/${name}.html"
+            mv resume-out.html "dist/${name}.html"
           done
 
           echo "--- File generati ---"
